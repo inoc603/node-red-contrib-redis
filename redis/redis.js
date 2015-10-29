@@ -4,9 +4,9 @@ module.exports = function(RED) {
     var redis = require("redis");
 
     var hashFieldRE = /^([^=]+)=(.*)$/;
-    var validCmd = [
-      'sadd', 'spop', 'smembers', 'sismember'
-    ]
+    // var validCmd = [
+    //   'sadd', 'spop', 'smembers', 'sismember'
+    // ]
 
     var redisConnectionPool = function() {
         var connections = {};
@@ -70,19 +70,16 @@ module.exports = function(RED) {
             var cmd = msg.payload[0]
             var args = msg.payload
             args.shift()
-            if (validCmd.indexOf(cmd) !== -1) {
-              this.client.send_command(cmd, args, function (err, reply) {
-                if (err) {
-                  msg.payload = err
-                }
-                else {
-                  msg.payload = reply
-                }
-                node.send(msg)
-              })
-            }
-            else
-              node.warn('Command ' + cmd + ' is not supported')
+
+            this.client.send_command(cmd, args, function (err, reply) {
+              if (err) {
+                msg.payload = err
+              }
+              else {
+                msg.payload = reply
+              }
+              node.send(msg)
+            })
         })
 
 
