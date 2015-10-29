@@ -1,4 +1,4 @@
-<script type="text/x-red" data-template-name="redis in">
+<script type="text/x-red" data-template-name="redis cmd">
     <div class="form-row node-input-hostname">
         <label for="node-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
         <input class="input-append-left" type="text" id="node-input-hostname" placeholder="127.0.0.1" style="width: 40%;" ><button id="node-input-hostname-lookup" class="btn input-append-right"><span class="caret"></span></button>
@@ -33,28 +33,28 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="redis out">
-    <p>A Redis output node. Options include Hash, Set, List and String.</p>
+<script type="text/x-red" data-help-name="redis cmd">
+    <p>A Redis command node.</p>
+    <p>Pass in command and arguments in msg.payload</p>
+    <p>e.g. msg.payload = ['set', 'mykey', 'myvalue']</p>
     <p>To run this you need a local Redis server running. For details see <a href="http://redis.io/" target="_new">the Redis site</a>.</p>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('redis in',{
+    RED.nodes.registerType('redis cmd',{
         category: 'storage-in',
         color:"#ffaaaa",
         defaults: {
             hostname: { value:"127.0.0.1",required:true},
             port: { value: 6379,required:true},
-            name: {value:""},
-            key: {value:""},
-            structtype: {value:"",required:true}
+            name: {value:""}
         },
         inputs:1,
         outputs:1,
         icon: "redis.png",
         align: "right",
         label: function() {
-            return this.name||this.key+" ("+this.structtype+")";
+            return this.name || this.hostname + ":" + this.port
         },
         oneditprepare: function() {
             var availableServers = [];

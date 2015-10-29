@@ -87,5 +87,5 @@ module.exports = function(RED) {
             redisConnectionPool.close(node.client);
         });
     }
-    RED.nodes.registerType("redis in",RedisInNode);
+    RED.nodes.registerType("redis cmd",RedisInNode);
 }
