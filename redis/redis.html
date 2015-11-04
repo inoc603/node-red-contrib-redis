@@ -1,94 +1,94 @@
 <script type="text/x-red" data-template-name="redis cmd">
-    <div class="form-row node-input-hostname">
-        <label for="node-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
-        <input class="input-append-left" type="text" id="node-input-hostname" placeholder="127.0.0.1" style="width: 40%;" ><button id="node-input-hostname-lookup" class="btn input-append-right"><span class="caret"></span></button>
-        <label for="node-input-port" style="margin-left: 10px; width: 35px; "> Port</label>
-        <input type="text" id="node-input-port" placeholder="6379" style="width:45px">
-    </div>
-    <!--
-    <div class="form-row">
-        <label for="node-input-key"><i class="fa fa-key"></i> Key</label>
-        <input type="text" id="node-input-key" placeholder="Redis Key">
-    </div>
+  <div class="form-row node-input-hostname">
+    <label for="node-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
+    <input class="input-append-left" type="text" id="node-input-hostname" placeholder="127.0.0.1" style="width: 40%" ><button id="node-input-hostname-lookup" class="btn input-append-right"><span class="caret"></span></button>
+    <label for="node-input-port" style="margin-left: 10px width: 35px "> Port</label>
+    <input type="text" id="node-input-port" placeholder="6379" style="width:45px">
+  </div>
+  <!--
+  <div class="form-row">
+    <label for="node-input-key"><i class="fa fa-key"></i> Key</label>
+    <input type="text" id="node-input-key" placeholder="Redis Key">
+  </div>
 
-    <div class="form-row">
-        <label for="node-input-type"><i class="fa fa-th"></i> Type</label>
-        <select type="text" id="node-input-structtype" style="width: 150px;">
-        <option value="string">String</option>
-        <option value="hash">Hash</option>
-        <option value="set">Set</option>
-        <option value="zset">Sorted Set</option>
-        <option value="list">List</option>
-        </select>
-    </div>
-    -->
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-    <div class="form-tips">
-        supported commands: sadd, smembers, sismember, spop<br>
-        send commands in payload in format of [cmd, args...] <br>
-        e.g. ['sadd', 'test_set', 1]
-    </div>
+  <div class="form-row">
+    <label for="node-input-type"><i class="fa fa-th"></i> Type</label>
+    <select type="text" id="node-input-structtype" style="width: 150px">
+    <option value="string">String</option>
+    <option value="hash">Hash</option>
+    <option value="set">Set</option>
+    <option value="zset">Sorted Set</option>
+    <option value="list">List</option>
+    </select>
+  </div>
+  -->
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-tips">
+    supported commands: sadd, smembers, sismember, spop<br>
+    send commands in payload in format of [cmd, args...] <br>
+    e.g. ['sadd', 'test_set', 1]
+  </div>
 </script>
 
 <script type="text/x-red" data-help-name="redis cmd">
-    <p>A Redis command node.</p>
-    <p>Pass in command and arguments in msg.payload</p>
-    <p>e.g. msg.payload = ['set', 'mykey', 'myvalue']</p>
-    <p>To run this you need a local Redis server running. For details see <a href="http://redis.io/" target="_new">the Redis site</a>.</p>
+  <p>A Redis command node.</p>
+  <p>Pass in command and arguments in msg.payload</p>
+  <p>e.g. msg.payload = ['set', 'mykey', 'myvalue']</p>
+  <p>To run this you need a local Redis server running. For details see <a href="http://redis.io/" target="_new">the Redis site</a>.</p>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('redis cmd',{
-        category: 'storage-in',
-        color:"#ffaaaa",
-        defaults: {
-            hostname: { value:"127.0.0.1",required:true},
-            port: { value: 6379,required:true},
-            name: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        icon: "redis.png",
-        align: "right",
-        label: function() {
-            return this.name || this.hostname + ":" + this.port
-        },
-        oneditprepare: function() {
-            var availableServers = [];
-            var matchedServers = {};
-            RED.nodes.eachNode(function(node) {
-                if (node.type == "redis out" && node.hostname && node.port && !matchedServers[node.hostname+":"+node.port]) {
-                    var label = node.hostname+":"+node.port;
-                    matchedServers[label] = true;
-                    availableServers.push({
-                        label:label,
-                        value:node.hostname,
-                        port:node.port
-                    });
-                }
-            });
-            $( "#node-input-hostname" ).autocomplete({
-                minLength: 0,
-                source: availableServers,
-                select: function( event, ui ) {
-                    $("#node-input-port").val(ui.item.port);
-                }
-            });
-            var tt = this;
-            tt._acOpen = false;
-            $( "#node-input-hostname" ).on( "autocompleteclose", function( event, ui ) { tt._acOpen = false;} );
-            $( "#node-input-hostname-lookup" ).click(function(e) {
-                if (tt._acOpen) {
-                    $( "#node-input-hostname" ).autocomplete( "close");
-                } else {
-                    $( "#node-input-hostname" ).autocomplete( "search", "" );
-                }
-                tt._acOpen = !tt._acOpen;
-                e.preventDefault();
-            });
+  RED.nodes.registerType('redis cmd',{
+    category: 'storage-in',
+    color:"#ffaaaa",
+    defaults: {
+      hostname: { value:"127.0.0.1",required:true},
+      port: { value: 6379,required:true},
+      name: {value:""}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "redis.png",
+    align: "right",
+    label: function() {
+      return this.name || this.hostname + ":" + this.port
+    },
+    oneditprepare: function() {
+      var availableServers = []
+      var matchedServers = {}
+      RED.nodes.eachNode(function(node) {
+        if (node.type == "redis out" && node.hostname && node.port && !matchedServers[node.hostname+":"+node.port]) {
+          var label = node.hostname+":"+node.port
+          matchedServers[label] = true
+          availableServers.push({
+            label:label,
+            value:node.hostname,
+            port:node.port
+          })
         }
-    });
+      })
+      $( "#node-input-hostname" ).autocomplete({
+        minLength: 0,
+        source: availableServers,
+        select: function( event, ui ) {
+          $("#node-input-port").val(ui.item.port)
+        }
+      })
+      var tt = this
+      tt._acOpen = false
+      $( "#node-input-hostname" ).on( "autocompleteclose", function( event, ui ) { tt._acOpen = false} )
+      $( "#node-input-hostname-lookup" ).click(function(e) {
+        if (tt._acOpen) {
+          $( "#node-input-hostname" ).autocomplete( "close")
+        } else {
+          $( "#node-input-hostname" ).autocomplete( "search", "" )
+        }
+        tt._acOpen = !tt._acOpen
+        e.preventDefault()
+      })
+    }
+  })
 </script>
