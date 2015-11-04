@@ -68,15 +68,21 @@ module.exports = function(RED) {
     node.status(node.client.connected ? CONNECTED : DISCONNECTED)
 
     node.on('input', function(msg) {
-      var cmd = msg.payload[0]
-        , args = msg.payload
-      args.shift()
+      try {
+        var cmd = msg.payload[0]
+          , args = msg.payload
+        args.shift()
 
-      node.client.send_command(cmd, args, function (err, reply) {
-        msg.error = err
-        msg.payload = reply
-        node.send(msg)
-      })
+        node.client.send_command(cmd, args, function (err, reply) {
+          msg.error = err
+          msg.payload = reply
+          node.send(msg)
+        })
+      }
+      catch (e) {
+        console.log('[redis cmd error] ', e.stack || e.toString())
+      }
+
     })
 
     node.on('close', function() {
